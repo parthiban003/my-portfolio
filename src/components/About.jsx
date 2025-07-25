@@ -17,7 +17,7 @@ export const About = () => {
         
             <h2 className="text-2xl">Junior Frontend Developer @<u className="text-primary">Ebrain Technologies</u></h2>
             <p className="text-muted-foreground">
-              <i>With over 1 year of experience in web development,</i><br /> Built responsive and modern web interfaces using HTML5, CSS3, and Bootstrap5. Collaborated on real-time projects using JavaScript and React.js, implementing reusable components and managing state effectively. Gained practical experience in integrating UI. with REST APIs and handling user interactions. Completed assigned tasks independently and contributed to UI/UX improvements in internal tools. Demonstrated strong problem-solving skills and eagerness to learn in a fast-paced team environment.
+              <u><i>With over 1 year of experience in web development</i></u><br /> Built responsive and modern web interfaces using HTML5, CSS3, Bootstrap5 and TailwindCSS . Collaborated on real-time projects using JavaScript and React.js, implementing reusable components and managing state effectively. Gained practical experience in integrating UI. with REST APIs and handling user interactions. Completed assigned tasks independently and contributed to UI/UX improvements in internal tools. Demonstrated strong problem-solving skills and eagerness to learn in a fast-paced team environment.
             </p>
 
             <p className="text-muted-foreground">
@@ -34,7 +34,7 @@ export const About = () => {
               </a>
 
               <a
-                href=""
+                href="/Parthiban Frontend dev.pdf.pdf"
                 className="px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary/10 transition-colors duration-300"
               >
                 Download CV

@@ -8,11 +8,13 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 export const Contact = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,8 +29,35 @@ export const Contact = () => {
       setIsSubmitting(false);
     }, 1500);
   };
+
+  const form = useRef();
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    emailjs
+      .sendForm(
+        "service_88t9byi",
+        "template_9w7wb1h",
+        form.current,
+        "K1PGXksNEKk6uHbJt"
+      )
+      .then(
+        (result) => {
+          console.log("Email sent:", result.text);
+          form.current.reset();
+          setIsSubmitting(false);
+        },
+        (error) => {
+          console.error("Email error:", error.text);
+          setIsSubmitting(false);
+        }
+      );
+  };
+
+
   return (
-    <section id="contact" className="py-24 px-4 relative bg-secondary/30">
+    <section id="contact" className="py-24 px-4 relative bg-secondary/30" autocomplete="off">
       <div className="container mx-auto max-w-5xl">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
           Get In <span className="text-primary"> Touch</span>
@@ -94,11 +123,11 @@ export const Contact = () => {
                 <a href="https://www.linkedin.com/in/parthiban-m-058760299/" target="_blank">
                   <Linkedin />
                 </a>
-                
+
                 <a href="#" target="_blank">
                   <Instagram />
                 </a>
-                
+
               </div>
             </div>
           </div>
@@ -109,56 +138,49 @@ export const Contact = () => {
           >
             <h3 className="text-2xl font-semibold mb-6"> Send a Message</h3>
 
-            <form className="space-y-6">
+            <form
+              ref={form}
+              onSubmit={sendEmail}
+              className="space-y-6"
+              autoComplete="off"
+            >
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
+                <label htmlFor="name" className="block text-sm font-medium mb-2">
                   Your Name
                 </label>
                 <input
                   type="text"
                   id="name"
-                  name="name"
+                  name="name" // must match EmailJS template variable
                   required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden foucs:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
                   placeholder="Sample Name..."
                 />
               </div>
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
+                <label htmlFor="email" className="block text-sm font-medium mb-2">
                   Your Email
                 </label>
                 <input
                   type="email"
                   id="email"
-                  name="email"
+                  name="email" // must match EmailJS template variable
                   required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden foucs:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
                   placeholder="john@gmail.com"
                 />
               </div>
 
               <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
+                <label htmlFor="message" className="block text-sm font-medium mb-2">
                   Your Message
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden foucs:ring-2 focus:ring-primary resize-none"
+                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary resize-none"
                   placeholder="Hello, I'd like to talk about..."
                 />
               </div>
