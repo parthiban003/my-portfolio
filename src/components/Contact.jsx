@@ -10,54 +10,95 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
+import * as Yup from "yup";
+
 
 export const Contact = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    const formData = {
+      name: e.target.name.value.trim(),
+      email: e.target.email.value.trim(),
+      message: e.target.message.value.trim(),
+    };
+
+    try {
+      await validationSchema.validate(formData, { abortEarly: false });
+
+      await sendEmail(formData);
+
+      if (form.current) {
+        form.current.reset();
+      }
+
+      setFormErrors({});
       toast({
         title: "Message sent!",
         description: "Thank you for your message. I'll get back to you soon.",
       });
+    } catch (err) {
+      if (err.inner) {
+        const errors = {};
+        err.inner.forEach((e) => {
+          errors[e.path] = e.message;
+        });
+        setFormErrors(errors);
+      }
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   const form = useRef();
-  const sendEmail = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const sendEmail = async (formData) => {
+    try {
+      const templateParams = {
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      };
 
-    emailjs
-      .sendForm(
+      const result = await emailjs.send(
         "service_88t9byi",
         "template_9w7wb1h",
-        form.current,
+        templateParams,
         "K1PGXksNEKk6uHbJt"
-      )
-      .then(
-        (result) => {
-          console.log("Email sent:", result.text);
-          form.current.reset();
-          setIsSubmitting(false);
-        },
-        (error) => {
-          console.error("Email error:", error.text);
-          setIsSubmitting(false);
-        }
       );
+
+      console.log("Email sent:", result.text);
+    } catch (error) {
+      console.error("Email error:", error.text);
+    }
+  };
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(3, "Name must be at least 3 characters")
+      .required("Name is required"),
+
+    email: Yup.string()
+      .email("Invalid email")
+      .required("Email is required"),
+
+    message: Yup.string()
+      .min(10, "Message should be at least 10 characters")
+      .required("Message is required"),
+  });
+
+  const clearError = (field) => {
+    setFormErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
 
   return (
-    <section id="contact" className="py-24 px-4 relative bg-secondary/30" autocomplete="off">
+    <section id="contact" className="py-24 px-4 relative bg-secondary/30" autoComplete="off">
       <div className="container mx-auto max-w-5xl">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
           Get In <span className="text-primary"> Touch</span>
@@ -134,15 +175,16 @@ export const Contact = () => {
 
           <div
             className="bg-card p-8 rounded-lg shadow-xs"
-            onSubmit={handleSubmit}
+
           >
             <h3 className="text-2xl font-semibold mb-6"> Send a Message</h3>
 
             <form
               ref={form}
-              onSubmit={sendEmail}
+              onSubmit={handleSubmit}
               className="space-y-6"
               autoComplete="off"
+
             >
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-2">
@@ -151,11 +193,14 @@ export const Contact = () => {
                 <input
                   type="text"
                   id="name"
-                  name="name" // must match EmailJS template variable
-                  required
+                  name="name"
+                  onChange={(e) => {
+                    clearError("name");
+                  }}
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
                   placeholder="Sample Name..."
                 />
+                {formErrors.name && <p className="text-red-500 text-sm">{formErrors.name}</p>}
               </div>
 
               <div>
@@ -165,11 +210,14 @@ export const Contact = () => {
                 <input
                   type="email"
                   id="email"
-                  name="email" // must match EmailJS template variable
-                  required
+                  name="email"
+                  onChange={(e) => {
+                    clearError("email");
+                  }}
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
                   placeholder="john@gmail.com"
                 />
+                {formErrors.email && <p className="text-red-500 text-sm">{formErrors.email}</p>}
               </div>
 
               <div>
@@ -179,17 +227,20 @@ export const Contact = () => {
                 <textarea
                   id="message"
                   name="message"
-                  required
+                  onChange={(e) => {
+                    clearError("message");
+                  }}
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary resize-none"
                   placeholder="Hello, I'd like to talk about..."
                 />
+                {formErrors.message && <p className="text-red-500 text-sm">{formErrors.message}</p>}
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
                 className={cn(
-                  "cosmic-button w-full flex items-center justify-center gap-2"
+                  "cosmic-button w-full flex items-center justify-center gap-2 cursor-pointer"
                 )}
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
