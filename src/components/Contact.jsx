@@ -198,7 +198,7 @@ export const Contact = () => {
                     clearError("name");
                   }}
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
-                  placeholder="Sample Name..."
+                  placeholder="Your Name..."
                 />
                 {formErrors.name && <p className="text-red-500 text-sm">{formErrors.name}</p>}
               </div>
@@ -215,7 +215,7 @@ export const Contact = () => {
                     clearError("email");
                   }}
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
-                  placeholder="john@gmail.com"
+                  placeholder="Your Email..."
                 />
                 {formErrors.email && <p className="text-red-500 text-sm">{formErrors.email}</p>}
               </div>
