@@ -161,11 +161,13 @@ export const Contact = () => {
             <div className="pt-8">
               <h4 className="font-medium mb-4"> Connect With Me</h4>
               <div className="flex space-x-4 justify-center">
-                <a href="https://www.linkedin.com/in/parthiban-m-058760299/" target="_blank">
+                <a href="https://www.linkedin.com/in/parthiban-m-058760299/" target="_blank"
+                className="hover:text-primary"
+                >
                   <Linkedin />
                 </a>
 
-                <a href="#" target="_blank">
+                <a href="#" target="_blank" className="hover:text-danger">
                   <Instagram />
                 </a>
 
