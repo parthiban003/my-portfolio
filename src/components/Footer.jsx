@@ -6,11 +6,11 @@ export const Footer = () => {
       {" "}
       <p className="text-sm text-muted-foreground">
         {" "}
-        &copy; {new Date().getFullYear()} Parthiban.dev All rights reserved.
+        &copy; {new Date().getFullYear()} All rights reserved Parthiban.Dev.
       </p>
       <a
         href="#hero"
-        className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors"
+        className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors animate-bounce"
       >
         <ArrowUp size={20} />
       </a>
